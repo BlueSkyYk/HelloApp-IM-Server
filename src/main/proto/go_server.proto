@@ -1,0 +1,51 @@
+// Copyright 2015 The gRPC Authors
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.cuityk.helloappim.gorpcproto";
+option java_outer_classname = "GoRpcProto";
+option objc_class_prefix = "GRP";
+
+package rpcprotos;
+
+//定义Go提供的服务接口
+service GoRpcServerInterface {
+
+    //登录IM
+    rpc IMLogin (LoginParam) returns (GoBaseResult) {
+    }
+
+    //Server To Client 消息发送结果回调
+    rpc ServerToClientMessageResult (ServerToClientMsgResultParam) returns (GoBaseResult) {
+    }
+}
+
+//用户登录
+message LoginParam {
+    string account = 1;
+    string password = 2;
+}
+
+//ServerToClientMsgResult
+message ServerToClientMsgResultParam {
+    int32 code = 1;
+    int32 msgId = 2;
+}
+
+//JavaBaseResult
+message GoBaseResult {
+    int32 code = 1;
+    string message = 2;
+}

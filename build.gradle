@@ -1,0 +1,74 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.google.protobuf:protobuf-gradle-plugin:0.8.8'
+    }
+}
+
+plugins {
+    id 'application'
+    // Provide convenience executables for trying out the examples.
+    id 'java'
+    // ASSUMES GRADLE 2.12 OR HIGHER. Use plugin version 0.7.5 with earlier gradle versions
+    id 'com.google.protobuf' version '0.8.8'
+    // Generate IntelliJ IDEA's .idea & .iml project file()
+    id 'idea'
+}
+
+group 'com.cuityk.helloappim'
+version '1.0-SNAPSHOT'
+
+sourceSets {
+    mainClassName = 'com.cuityk.helloappim.Main'
+}
+jar {
+    manifest {
+        attributes 'Main-Class': 'com.cuityk.helloappim.Main'
+    }
+    from {
+//        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+        configurations.runtime.collect{zipTree(it)}
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+dependencies {
+//    implementation fileTree(include: ['*.jar'], dir: 'libs')
+//    testCompile group: 'junit', name: 'junit', version: '4.12'
+    compile 'io.grpc:grpc-netty-shaded:1.21.0'
+    compile 'io.grpc:grpc-protobuf:1.21.0'
+    compile 'io.grpc:grpc-stub:1.21.0'
+    compile files('libs/gson-2.7.jar')
+    compile files('libs/log4j-1.2.17.jar')
+    compile files('libs/mina-core-2.0.14.jar')
+    compile files('libs/MobileIMSDKServerX_mina.jar')
+    compile files('libs/rabbitmq-client.jar')
+    compile files('libs/slf4j-api-1.7.21.jar')
+    compile files('libs/slf4j-log4j12-1.7.21.jar')
+}
+
+
+protobuf {
+    protoc {
+        artifact = "com.google.protobuf:protoc:3.7.1"
+    }
+    plugins {
+        grpc { artifact = 'io.grpc:protoc-gen-grpc-java:1.21.0' }
+    }
+    generateProtoTasks {
+        all()*.plugins { grpc {} }
+    }
+}
+
+//指定编译的编码
+tasks.withType(JavaCompile){
+    options.encoding = "UTF-8"
+}
